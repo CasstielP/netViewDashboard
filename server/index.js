@@ -4,6 +4,7 @@ const dotenv = require("dotenv")
 const {sequelize} = require("./config/database")
 const deviceRoutes = require('./routes/deviceRoutes')
 const seedDevices = require("./seeders/seedDevices")
+const seedConfig = require('./seeders/seedConfig')
 const configRoutes = require("./routes/configRoutes")
 
 dotenv.config()
