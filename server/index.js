@@ -6,7 +6,7 @@ const deviceRoutes = require('./routes/deviceRoutes')
 const seedDevices = require("./seeders/seedDevices")
 const seedConfig = require('./seeders/seedConfig')
 const configRoutes = require("./routes/configRoutes")
-
+const seedUsers = require('./seeders/seedUsers')
 dotenv.config()
 
 const app = express()
@@ -26,6 +26,7 @@ app.get("/", (req, res) => {
 sequelize.sync({force: true}).then(async ()=> {
     await seedDevices();
     await seedConfig();
+    await seedUsers();
     app.listen(PORT, ()=> {
         console.log(`Server running on http://localhost:${PORT}`)
     })
