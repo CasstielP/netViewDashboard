@@ -5,7 +5,7 @@ import ConfigPage from "./pages/configPage";
 import Login from "./pages/Login";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchMe } from "./features/auth/authSlice";
-
+import Navbar from "./components/NavBar";
 
 
 
@@ -22,6 +22,7 @@ const App = () => {
 
   return (
     <Router>
+      <Navbar />
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/login" element={<Login />} />
