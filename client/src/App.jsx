@@ -28,7 +28,6 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/config" element={user ? <ConfigPage /> : <Login />} />
       </Routes>
-      
     </Router>
   );
 };

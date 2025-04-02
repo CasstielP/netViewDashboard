@@ -1,25 +1,30 @@
 const express = require("express");
 const router = express.Router();
-const Config = require("../models/Config");
+const { Config } = require("../models");
 
-// GET all config settings
+// GET /api/config
 router.get("/", async (req, res) => {
-  const configs = await Config.findAll();
-  res.json(configs);
+  try {
+    const configs = await Config.findAll();
+    res.json(configs);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch configs" });
+  }
 });
 
-// PUT update setting
+// PUT /api/config/:key
 router.put("/:key", async (req, res) => {
-  const { key } = req.params;
-  const { value } = req.body;
+  try {
+    const config = await Config.findOne({ where: { key: req.params.key } });
+    if (!config) return res.status(404).json({ error: "Config not found" });
 
-  const config = await Config.findOne({ where: { key } });
-  if (!config) return res.status(404).json({ error: "Config not found" });
+    config.value = req.body.value;
+    await config.save();
 
-  config.value = value;
-  await config.save();
-
-  res.json(config);
+    res.json(config);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to update config" });
+  }
 });
 
 module.exports = router;

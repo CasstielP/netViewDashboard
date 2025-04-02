@@ -1,7 +1,7 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const User = require("../models/User");
+const { User } = require("../models");
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || "dev_secret";
@@ -9,8 +9,8 @@ const JWT_SECRET = process.env.JWT_SECRET || "dev_secret";
 // POST /api/login
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
-  const user = await User.findOne({ where: { username } });
 
+  const user = await User.findOne({ where: { username } });
   if (!user) return res.status(401).json({ error: "Invalid credentials" });
 
   const isValid = await bcrypt.compare(password, user.passwordHash);
@@ -20,10 +20,12 @@ router.post("/login", async (req, res) => {
   res.json({ token, user: { username: user.username, role: user.role } });
 });
 
-// GET /api/me (verify token)
-router.get("/me", async (req, res) => {
+// GET /api/me
+router.get("/me", (req, res) => {
   const auth = req.headers.authorization;
-  if (!auth || !auth.startsWith("Bearer ")) return res.status(401).json({ error: "Missing token" });
+  if (!auth || !auth.startsWith("Bearer ")) {
+    return res.status(401).json({ error: "Missing token" });
+  }
 
   const token = auth.split(" ")[1];
   try {
